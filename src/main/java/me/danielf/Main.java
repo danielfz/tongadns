@@ -129,7 +129,6 @@ public class Main {
             targetIP = ip;
             lastTime = System.currentTimeMillis();
         });
-        process.close();
     }
 }
 
