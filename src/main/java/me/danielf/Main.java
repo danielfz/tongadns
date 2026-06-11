@@ -23,7 +23,7 @@ public class Main {
             //sock.bind(new InetSocketAddress());
             var buf = new byte[BUF_SIZE];
             var p = new DatagramPacket(buf, buf.length);
-            System.out.println(LocalDateTime.now() + " | Listening at " + sock.getLocalSocketAddress());
+            log("Listening at " + sock.getLocalSocketAddress());
             while (true) {
                 sock.receive(p);
                 buildResponse(p);
@@ -33,7 +33,7 @@ public class Main {
                 }
             }
         } catch (IOException e) {
-            System.err.println(LocalDateTime.now() + " | " + e.getMessage());
+            System.err.println(e.getMessage());
             e.printStackTrace(System.err);
         }
     }
@@ -76,7 +76,7 @@ public class Main {
             }
             buf[i++] = data[k++];
         }
-        System.out.println(LocalDateTime.now() + " | Query: " + host);
+        log("Query: " + host);
         buf[i++] = data[k++]; // copy the null
         // copy QTYPE and QCLASS (4 bytes)
         buf[i++] = data[k++];
@@ -122,13 +122,17 @@ public class Main {
     }
 
     private static void updateIP() throws IOException {
-        System.out.println(LocalDateTime.now() + " | Updating IP address");
+        log("Updating IP address");
         var process = new ProcessBuilder().command("tailscale", "ip").start();
         InputStream out = process.getInputStream();
         new BufferedReader(new InputStreamReader(out)).lines().findFirst().ifPresent(ip -> {
             targetIP = ip;
             lastTime = System.currentTimeMillis();
         });
+    }
+
+    private static void log(String msg) {
+        System.out.println(msg);
     }
 }
 
