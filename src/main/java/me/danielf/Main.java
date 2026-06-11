@@ -123,13 +123,13 @@ public class Main {
 
     private static void updateIP() throws IOException {
         System.out.println(LocalDateTime.now() + " | Updating IP address");
-        try (var process = new ProcessBuilder() .command("tailscale", "ip").start()) {
-            InputStream out = process.getInputStream();
-            new BufferedReader(new InputStreamReader(out)).lines().findFirst().ifPresent(ip -> {
-                targetIP = ip;
-                lastTime = System.currentTimeMillis();
-            });
-        }
+        var process = new ProcessBuilder().command("tailscale", "ip").start();
+        InputStream out = process.getInputStream();
+        new BufferedReader(new InputStreamReader(out)).lines().findFirst().ifPresent(ip -> {
+            targetIP = ip;
+            lastTime = System.currentTimeMillis();
+        });
+        process.close();
     }
 }
 
